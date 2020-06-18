@@ -6,21 +6,31 @@ function App() {
   const [repositories, setRepositories] = useState([]);
 
   useEffect(() => {
-    api.get('/repositories').then( response => {
+    api.get('repositories').then( response => {
       setRepositories(response.data);
-      console.log(response);
-      console.log(repositories);
-      
       
     })
   }, []);
 
   async function handleAddRepository() {
-    // TODO
+    const response = await api.post('repositories', {
+        title: `some new project ${Date.now()}`,
+        url: "url do projeto",
+        techs: [
+          "nodejs",
+          "react"
+        ]
+    });
+
+    const repository = response.data;
+    setRepositories([...repositories, repository]);
   }
 
   async function handleRemoveRepository(id) {
-    // TODO
+    await api.delete(`repositories/${id}`);
+    setRepositories(repositories.filter(repo => repo.id !== id));
+    
+
   }
 
   return (
